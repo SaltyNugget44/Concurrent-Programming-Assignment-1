@@ -68,17 +68,24 @@ public class BankAccountTransaction {
             printProcessingMenu();
             int mode = getIntInput("  Enter your choice: ");
 
-            if (mode < 1 || mode > 2) {
-                System.out.println("  [!] Invalid choice. Returning to menu.");
-                continue;
-            }
-
             // Run the chosen demo with the shared account
             System.out.println();
-            if (mode == 1) {
-                SequentialDemo.run(account, choice, amount);
-            } else if (mode == 2) {
-                ConcurrentDemo.run(account, choice, amount);
+            switch (mode) {
+                case 1:
+                    SequentialDemo.run(account, choice, amount);
+                    break;
+                case 2:
+                    ConcurrentDemo.run(account, choice, amount);
+                    break;
+                case 3:
+                    RaceConditionDemo.run(account, choice, amount);
+                    break;
+                case 4:
+                    SynchronizationDemo.run(account, choice, amount);
+                    break;
+                default:
+                    System.out.println("  [!] Invalid choice. Returning to menu.");
+                    continue;
             }
 
             // Pause before going back to menu
