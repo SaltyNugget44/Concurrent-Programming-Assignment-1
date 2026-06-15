@@ -1,0 +1,102 @@
+public class Concurrent {
+
+    static class TransactionWorker implements Runnable {
+
+        private final BankAccount account;   
+        private final int         txType;   
+        private final double      amount;
+        private final int         txId;
+        private final int         sleepMs;  
+
+        public TransactionWorker(BankAccount account, int txType,
+                                 double amount, int txId, int sleepMs) {
+            this.account  = account;
+            this.txType   = txType;
+            this.amount   = amount;
+            this.txId     = txId;
+            this.sleepMs  = sleepMs;
+        }
+
+        @Override
+        public void run() {
+            String threadName = Thread.currentThread().getName();
+
+            System.out.println("  " + threadName + " started  --> " + describe());
+
+            try {
+                Thread.sleep(sleepMs);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.out.println("  " + threadName + " was interrupted.");
+                return;
+            }
+
+            switch (txType) {
+                case 1: account.deposit(amount);      break;
+                case 2: account.withdraw(amount);     break;
+                case 3: account.checkBalance();       break;
+                case 4: account.serviceCharge();      break;
+            }
+
+            System.out.printf("  %s finished --> %s  |  Balance now: RM%.2f%n",
+                              threadName, describe(), account.getBalance());
+        }
+
+        private String describe() {
+            switch (txType) {
+                case 1:  return "Deposit RM"        + String.format("%.2f", amount);
+                case 2:  return "Withdraw RM"       + String.format("%.2f", amount);
+                case 3:  return "Check Balance";
+                case 4:  return "Service Charge RM" + String.format("%.2f", BankAccount.SERVICE_CHARGE_AMOUNT);
+                default: return "Unknown Transaction";
+            }
+        }
+    }
+
+    public static void run(BankAccount account, int txChoice, double amount) {
+
+        System.out.println("\n╔══════════════════════════════════════╗");
+        System.out.println("║     CONCURRENT TRANSACTION MODE      ║");
+        System.out.println("╚══════════════════════════════════════╝");
+        System.out.printf ("  Shared account: %s  |  Starting balance: RM%.2f%n",
+                            account.getOwner(), account.getBalance());
+        System.out.println("  Four threads will now process transactions at overlapping times.");
+        System.out.println("  (Output order may change every run — this is expected behaviour.)");
+        System.out.println();
+        int[]    txTypes  = new int[4];
+        double[] amounts  = new double[4];
+        int[]    sleeps   = { 600, 300, 900, 450 };  
+
+        for (int i = 0; i < 4; i++) {
+            txTypes[i] = ((txChoice - 1 + i) % 4) + 1;  
+            amounts[i] = (txTypes[i] == 1 || txTypes[i] == 2) ? amount : 0;
+        }
+
+        Thread[] workers = new Thread[4];
+        for (int i = 0; i < 4; i++) {
+            Runnable task = new TransactionWorker(account, txTypes[i],
+                                                  amounts[i], i + 1, sleeps[i]);
+            workers[i] = new Thread(task, "Thread-" + (i + 1));
+        }
+
+        for (Thread w : workers) {
+            w.start();
+        }
+
+        for (Thread w : workers) {
+            try {
+                w.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        System.out.println();
+        System.out.println("  All threads have finished.");
+        System.out.printf ("  Final balance after concurrent processing: RM%.2f%n",
+                            account.getBalance());
+        System.out.println("╔══════════════════════════════════════╗");
+        System.out.println("║         END CONCURRENT MODE          ║");
+        System.out.println("╚══════════════════════════════════════╝");
+    }
+}
