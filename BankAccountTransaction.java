@@ -2,16 +2,16 @@ package Assignment_1;
 
 import java.util.Scanner;
 
-import java.util.Scanner;
-
 /**
- * BankTransactionSystem.java
-
+ * BankAccountTransaction.java
+ * MAIN FILE — run this to start the program.
+ *
  * Handles:
  *  - Login
- *  - Transaction menu (deposit / withdraw / check balance) service charge is hidden
- *  - Processing mode menu (sequential / concurrent/ race condition / synchronization)
- *  - Passes the shared BankAccount object to the chosen demo file
+ *  - Transaction menu (deposit / withdraw / check balance)
+ *  - Processing mode menu (sequential / concurrent / race condition / synchronization)
+ *  - For sequential: collects 8 transactions from user, then passes to SequentialDemo
+ *  - For others: passes single transaction + amount to the chosen demo
  */
 public class BankAccountTransaction {
 
@@ -20,7 +20,7 @@ public class BankAccountTransaction {
     private static final String VALID_PASSWORD = "1234";
 
     // Shared BankAccount object — lives here, passed to demos
-    // Balance is remembered across all transactions
+    // Balance is remembered across all transactions as long as program is running
     private static BankAccount account;
 
     private static Scanner scanner = new Scanner(System.in);
@@ -30,19 +30,18 @@ public class BankAccountTransaction {
 
         printWelcome();
 
-        // Login
+        // Step 1: Login
         if (!login()) {
             System.out.println("\n  [!] Too many failed attempts. Exiting...");
             return;
         }
 
-        // Create the shared BankAccount (initial balance RM1000)
+        // Step 2: Create the shared BankAccount (initial balance RM1000)
         account = new BankAccount("ACC-001", VALID_USERNAME.toUpperCase(), 1000.00);
-
         System.out.println("\n  Login successful! Welcome, " + account.getOwner() + ".");
-        System.out.println("  Your account has been loaded.");
+        System.out.println("  Your account has been loaded with RM1000.00");
 
-        // Main transaction loop
+        // Step 3: Main transaction loop
         int choice = -1;
         while (choice != 0) {
             printTransactionMenu();
@@ -58,34 +57,65 @@ public class BankAccountTransaction {
                 continue;
             }
 
-            // Get amount if needed
-            double amount = 0;
-            if (choice == 1 || choice == 2) {
-                amount = getDoubleInput("  Enter amount (RM): ");
-            }
-
-            // Pick processing mode
+            // Step 4: Pick processing mode first
             printProcessingMenu();
             int mode = getIntInput("  Enter your choice: ");
 
-            // Run the chosen demo with the shared account
+            if (mode < 1 || mode > 4) {
+                System.out.println("  [!] Invalid choice. Returning to menu.");
+                continue;
+            }
+
             System.out.println();
-            switch (mode) {
-                case 1:
-                    SequentialDemo.run(account, choice, amount);
-                    break;
-                case 2:
+
+            // Step 5: Sequential needs 8 transactions — collect all from user here in main
+            if (mode == 1) {
+                System.out.println("  You selected Sequential Processing.");
+                System.out.println("  Please enter 8 transactions.\n");
+
+                int[]    transactionTypes  = new int[8];
+                double[] amounts  = new double[8];
+
+                for (int i = 0; i < 8; i++) {
+                    System.out.println("  -- Transaction " + (i + 1) + " --");
+
+                    // Ask transaction type
+                    System.out.println("  Type: 1. Deposit   2. Withdraw   3. Check Balance");
+                    transactionTypes[i] = getIntInput("  Enter type: ");
+                    while (transactionTypes[i] < 1 || transactionTypes[i] > 3) {
+                        System.out.println("  [!] Invalid. Please enter 1, 2, or 3.");
+                        transactionTypes[i] = getIntInput("  Enter type: ");
+                    }
+
+                    // Ask amount if deposit or withdraw
+                    if (transactionTypes[i] == 1 || transactionTypes[i] == 2) {
+                        amounts[i] = getDoubleInput("  Enter amount (RM): ");
+                    } else {
+                        amounts[i] = 0; // no amount needed for check balance
+                    }
+
+                    System.out.println();
+                }
+
+                // Pass all 8 transactions to SequentialDemo
+                Sequential.run(account, transactionTypes, amounts);
+
+            // Step 6: All other modes — single transaction as usual
+            } else {
+
+                double amount = 0;
+                if (choice == 1 || choice == 2) {
+                    amount = getDoubleInput("  Enter amount (RM): ");
+                }
+
+                if (mode == 2) {
                     ConcurrentDemo.run(account, choice, amount);
-                    break;
-                case 3:
-                    RaceConditionDemo.run(account, choice, amount);
-                    break;
-                case 4:
+                } else if (mode == 3) {
+                    // RaceConditionDemo.run(account, choice, amount);
+                    System.out.println("  [Coming soon] Race Condition Demo");
+                } else if (mode == 4) {
                     SynchronizationDemo.run(account, choice, amount);
-                    break;
-                default:
-                    System.out.println("  [!] Invalid choice. Returning to menu.");
-                    continue;
+                }
             }
 
             // Pause before going back to menu
@@ -125,6 +155,7 @@ public class BankAccountTransaction {
     private static void printWelcome() {
         System.out.println("╔══════════════════════════════════════╗");
         System.out.println("║     BANK TRANSACTION SYSTEM          ║");
+        System.out.println("║     CSC2044 Group Assignment         ║");
         System.out.println("╚══════════════════════════════════════╝");
     }
 
