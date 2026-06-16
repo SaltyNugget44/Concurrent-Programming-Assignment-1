@@ -73,7 +73,7 @@ public class BankAccountTransaction {
                 System.out.println("  You selected Sequential Processing.");
                 System.out.println("  Please enter 8 transactions.\n");
 
-                int[]    transactionTypes  = new int[8];
+                int[]    txTypes  = new int[8];
                 double[] amounts  = new double[8];
 
                 for (int i = 0; i < 8; i++) {
@@ -81,14 +81,14 @@ public class BankAccountTransaction {
 
                     // Ask transaction type
                     System.out.println("  Type: 1. Deposit   2. Withdraw   3. Check Balance");
-                    transactionTypes[i] = getIntInput("  Enter type: ");
-                    while (transactionTypes[i] < 1 || transactionTypes[i] > 3) {
+                    txTypes[i] = getIntInput("  Enter type: ");
+                    while (txTypes[i] < 1 || txTypes[i] > 3) {
                         System.out.println("  [!] Invalid. Please enter 1, 2, or 3.");
-                        transactionTypes[i] = getIntInput("  Enter type: ");
+                        txTypes[i] = getIntInput("  Enter type: ");
                     }
 
                     // Ask amount if deposit or withdraw
-                    if (transactionTypes[i] == 1 || transactionTypes[i] == 2) {
+                    if (txTypes[i] == 1 || txTypes[i] == 2) {
                         amounts[i] = getDoubleInput("  Enter amount (RM): ");
                     } else {
                         amounts[i] = 0; // no amount needed for check balance
@@ -98,11 +98,11 @@ public class BankAccountTransaction {
                 }
 
                 // Pass all 8 transactions to SequentialDemo
-                Sequential.run(account, transactionTypes, amounts);
+                Sequential.run(account, txTypes, amounts);
 
             // Step 6: All other modes — single transaction as usual
             } else {
-
+                // Get amount if needed
                 double amount = 0;
                 if (choice == 1 || choice == 2) {
                     amount = getDoubleInput("  Enter amount (RM): ");
@@ -182,6 +182,7 @@ public class BankAccountTransaction {
     }
 
     // Input helpers
+
     private static int getIntInput(String prompt) {
         while (true) {
             System.out.print(prompt);
