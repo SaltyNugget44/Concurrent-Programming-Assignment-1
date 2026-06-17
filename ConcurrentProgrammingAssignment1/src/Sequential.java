@@ -1,5 +1,3 @@
-// TODO: fix so that it asks user for withdraw and deposit amounts
-
 class Sequential {
 
     public void run(BankAccount account, int[] txTypes, double[] amount){
