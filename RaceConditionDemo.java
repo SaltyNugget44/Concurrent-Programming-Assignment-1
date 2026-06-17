@@ -1,4 +1,4 @@
-package com.example.demo;
+package Assignment_1
 
 public class RaceConditionDemo {
     public static void run(BankAccount account, int choice, double amount) {
