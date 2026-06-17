@@ -111,8 +111,7 @@ public class BankAccountTransaction {
                 if (mode == 2) {
                     ConcurrentDemo.run(account, choice, amount);
                 } else if (mode == 3) {
-                    // RaceConditionDemo.run(account, choice, amount);
-                    System.out.println("  [Coming soon] Race Condition Demo");
+                    RaceConditionDemo.run(account, choice, amount);
                 } else if (mode == 4) {
                     SynchronizationDemo.run(account, choice, amount);
                 }
