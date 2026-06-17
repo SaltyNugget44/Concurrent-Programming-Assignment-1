@@ -75,7 +75,10 @@ public class BankAccount {
         System.out.printf("  [*] Service charge of RM%.2f deducted.%n", SERVICE_CHARGE_AMOUNT);
     }
 
-
+    //For Race Condition
+    public void setBalanceRC(double balance) {
+        this.balance = balance;
+    }
 
     
 }
