@@ -98,7 +98,7 @@ public class BankAccountTransaction {
                 }
 
                 // Pass all 8 transactions to SequentialDemo
-                Sequential.run(account, txTypes, amounts);
+                SequentialDemo.run(account, txTypes, amounts);
 
             // Step 6: All other modes — single transaction as usual
             } else {
