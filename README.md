@@ -41,7 +41,7 @@ TIFFANY SIM LING LIN
 
 
 
-**Authors' Note:
+## **Authors' Note:
 You just need to work on your responsible processing technique and calls it from bankaccount.java. Something something like dis!
 
 private static void processTransaction(BankAccount account, int transactionType, double amount) {
