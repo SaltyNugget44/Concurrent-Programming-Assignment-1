@@ -71,6 +71,7 @@ public class SynchronizationDemo {
             Thread.currentThread().interrupt();
         }
 
+        account.serviceCharge(); // steals money from customer for giving them service charge
         System.out.println("\nFinal Balance: RM" + String.format("%.2f", account.getBalance()));
     }
 }
