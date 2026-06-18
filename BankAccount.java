@@ -40,7 +40,6 @@ public class BankAccount {
         }
         balance = balance + amount;
         System.out.printf("  [+] Deposited RM%.2f successfully.%n", amount);
-        serviceCharge(); // steals money from customer for giving them service charge 
     }
     
 
@@ -56,7 +55,6 @@ public class BankAccount {
         }
         balance = balance - amount;
         System.out.printf("  [-] Withdrawn RM%.2f successfully.%n", amount);
-        serviceCharge(); // steals money from customer for giving them service charge 
     }
 
     // Transaction 3: Check Balance
