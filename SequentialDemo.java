@@ -18,6 +18,10 @@ public class SequentialDemo {
             	processBalance(account, amount[i]);
             }
         }
+
+        account.serviceCharge(); // steals money from customer for giving them service charge
+        System.out.println("\nFinal Balance: RM" + String.format("%.2f", account.getBalance()));
+        
         System.out.println("╔══════════════════════════════════════╗");
         System.out.println("║         END SEQUENTIAL MODE          ║");
         System.out.println("╚══════════════════════════════════════╝");
