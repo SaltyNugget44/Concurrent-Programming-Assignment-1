@@ -79,41 +79,56 @@ public class BankAccountTransaction {
                 for (int i = 0; i < 8; i++) {
                     System.out.println("  -- Transaction " + (i + 1) + " --");
 
-                    // Ask transaction type
                     System.out.println("  Type: 1. Deposit   2. Withdraw   3. Check Balance");
                     txTypes[i] = getIntInput("  Enter type: ");
+
                     while (txTypes[i] < 1 || txTypes[i] > 3) {
                         System.out.println("  [!] Invalid. Please enter 1, 2, or 3.");
                         txTypes[i] = getIntInput("  Enter type: ");
                     }
 
-                    // Ask amount if deposit or withdraw
                     if (txTypes[i] == 1 || txTypes[i] == 2) {
                         amounts[i] = getDoubleInput("  Enter amount (RM): ");
                     } else {
-                        amounts[i] = 0; // no amount needed for check balance
+                        amounts[i] = 0;
                     }
 
                     System.out.println();
                 }
 
-                // Pass all 8 transactions to SequentialDemo
                 SequentialDemo.run(account, txTypes, amounts);
+            }
 
-            // Step 6: All other modes — single transaction as usual
-            } else {
-                // Get amount if needed
-                double amount = 0;
-                if (choice == 1 || choice == 2) {
-                    amount = getDoubleInput("  Enter amount (RM): ");
-                }
+            // Step 7: All other modes — single transaction as usual
+            else {
 
                 if (mode == 2) {
-                    ConcurrentDemo.run(account, choice, amount);
-                } else if (mode == 3) {
-                    RaceConditionDemo.run(account, choice, amount);
-                } else if (mode == 4) {
-                    SynchronizationDemo.run(account, choice, amount);
+
+                    System.out.println("\n  CONCURRENT MODE INPUT");
+
+                    System.out.println("  Please enter values for concurrent transactions:");
+
+                    double depositAmount = getDoubleInput("  Enter Deposit amount: ");
+                    double withdrawAmount = getDoubleInput("  Enter Withdraw amount: ");
+
+                    ConcurrentDemo.run(account, depositAmount, withdrawAmount);
+                }
+
+                else {
+
+                    // default single-transaction logic
+                    double amount = 0;
+
+                    if (choice == 1 || choice == 2) {
+                        amount = getDoubleInput("  Enter amount (RM): ");
+                    }
+
+                    if (mode == 3) {
+                        RaceConditionDemo.run(account, choice, amount);
+                    } 
+                    else if (mode == 4) {
+                        SynchronizationDemo.run(account, choice, amount);
+                    }
                 }
             }
 
