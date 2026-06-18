@@ -1,57 +1,68 @@
-// TODO: fix so that it asks user for withdraw and deposit amounts
-import java.util.ArrayList;
-import java.util.List;
+package Assignment_1;
 
-class SequentialDemo {
+public class SequentialDemo {
 
-    public static void processTransactions(BankAccount account) throws Exception {
+    public static void run(BankAccount account, int[] txTypes, double[] amount){
+        // 1 = deposit
+        // 2 = withdraw
+    	// 3 = check balance
+        System.out.println("╔══════════════════════════════════════╗");
+        System.out.println("║     SEQUENTIAL PROCESSING MODE       ║");
+        System.out.println("╚══════════════════════════════════════╝");
+        for (int i = 0; i < amount.length; i++){
+            if (txTypes[i] == 1){
+                processDeposit(account, amount[i]);
+            } else if (txTypes[i] == 2) {
+                processWithdrawal(account, amount[i]);
+            } else if (txTypes[i] ==3) {
+            	processBalance(account, amount[i]);
+            }
+        }
+        System.out.println("╔══════════════════════════════════════╗");
+        System.out.println("║         END SEQUENTIAL MODE          ║");
+        System.out.println("╚══════════════════════════════════════╝");
+    }
 
-        List<Thread> workers    = new ArrayList<>();
+    public static void processDeposit(BankAccount account, double amount){
 
-        double[] withdrawAmount = {10.0, 20.0, 30.0, 40.0, 50.0};
-        double[] depositAmount  = {100.0, 200.0, 500.0, 600.0, 700.0};
-
-
-        // withdrawing workers to simulate a withdrawing action
-        for (int i = 0; i < withdrawAmount.length; i++) {
-            final int index = i;
-            workers.add(new Thread(() -> {
-                System.out.println("Withdrawing RM" + withdrawAmount[index] + "...");
-
-                // Thread.sleep to simulate processing time
-                try { 
-                    Thread.sleep(4000); 
-                } catch (Exception e) { 
-                    System.err.println(Thread.currentThread().getName() + " interrupted"); 
-                }
-
-                account.withdraw(withdrawAmount[index]);
-                account.checkBalance();
-            }, "Withdraw_Transaction_Worker-" + index));
+        System.out.println("Depositing RM" + amount + "...");
+        
+        try {
+            // sleep to simulate transaction process
+            Thread.sleep(2000);                    
+        } catch (InterruptedException e) {
+            System.err.println(Thread.currentThread().getName() + " interrupted"); 
         }
 
-        // 5 threads to simullate deposit workers
-        for (int i = 0; i < depositAmount.length; i++) {
-            final int index = i;
-            workers.add(new Thread(() -> {
-                System.out.println("Depositing RM" + depositAmount[index] + "...");
-                // Thread.sleep to simulate processing time
-                try { 
-                    Thread.sleep(4000); 
-                } catch (Exception e) { 
-                    System.err.println(Thread.currentThread().getName() + " interrupted"); 
-                }
-                account.deposit(depositAmount[index]);
-                account.checkBalance();
-            }, "Deposit_Transaction_Worker-" + index));
+        account.deposit(amount);
+        account.checkBalance();    
+    }  
+
+    public static void processWithdrawal(BankAccount account, double amount){
+        System.out.println("Withdrawing RM" + amount + "...");
+        
+        try {
+            // sleep to simulate transaction process
+            Thread.sleep(2000);                    
+        } catch (InterruptedException e) {
+            System.err.println(Thread.currentThread().getName() + " interrupted"); 
         }
 
-        // Run sequentially
-        for (Thread worker : workers) {
-            System.out.println("==== " + worker.getName() + ": Starting! ====");
-            worker.start();
-            worker.join();
-            System.out.println("==== " + worker.getName() + ": Done! ====\n");
-        }
+        account.withdraw(amount);
+        account.checkBalance();  
+        
+    }
+        
+    public static void processBalance(BankAccount account, double amount) {
+    	System.out.println("Checking Balance");
+    	
+    	try {
+    		Thread.sleep(2000);
+    	} catch(InterruptedException e) {
+    		System.err.println(Thread.currentThread().getName() + " Interrupted");
+    	}
+    	
+    	account.checkBalance();
+    
     }
 }
