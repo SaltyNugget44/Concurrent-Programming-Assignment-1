@@ -34,14 +34,14 @@ and thread-safe transaction handling on a shared bank account.
 - **Thread Pooling**: using 'ExecutorService' for managed concurrent execution
 
 ## Authors
-TAN LI KANG
-DARRYL CHAN WEI QIAN
-CHARISSA SANTOS CRUZ
-TIFFANY SIM LING LIN
+- TAN LI KANG
+- DARRYL CHAN WEI QIAN
+- CHARISSA SANTOS CRUZ
+- TIFFANY SIM LING LIN
 
 
 
-## **Authors' Note:
+### Authors' Note:
 You just need to work on your responsible processing technique and calls it from bankaccount.java. Something something like dis!
 
 private static void processTransaction(BankAccount account, int transactionType, double amount) {
