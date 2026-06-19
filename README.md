@@ -1,19 +1,18 @@
-# Bank Account Concurrency Demo
-A Java console application demonstrating race conditions, synchronization, 
-and thread-safe transaction handling on a shared bank account.
+# Concurrent Bank Account Transaction System
+A Java console application demonstrating sequential, concurrent, race conditions, and synchronization transaction processings on a shared bank account.
 
 ## Features
 - Sequential transaction processing
-- Concurrent transaction processing using ExecutorService
-- Race condition simulation (unsynchronized access)
-- Synchronized thread-safe transaction handling
-- Automatic service charge deduction after each transaction batch
+- Concurrent transaction processing
+- Race condition demonstration
+- Synchronized thread-safe processing
+- Automatic service charge deduction after each batch of transactions
 
 ## Project Structure
-├── BankAccount.java              # Core account logic (deposit, withdraw, service charge)
-├── SequentialDemo.java           # Baseline — transactions run one at a time
-├── SynchronizationDemo.java      # Thread-safe concurrent transactions
-├── RaceConditionDemo.java        # Demonstrates race conditions without synchronization
+├── BankAccount.java              # Core account logic (deposit, withdraw, service charge)  
+├── SequentialDemo.java           # Baseline — transactions run one at a time  
+├── SynchronizationDemo.java      # Thread-safe concurrent transactions  
+├── RaceConditionDemo.java        # Demonstrates race conditions without synchronization  
 └── BankAccountTransaction.java   # Main entry point
 
 ## How to Run
@@ -27,17 +26,18 @@ and thread-safe transaction handling on a shared bank account.
 - No external dependencies
 
 ## Key Concepts
+- **Sequential**: instructions are executed in a strict, step-by-step order
+- **Concurrency**: the ability of a program to manage multiple tasks at the same time
 - **Race Conditions**: occurs when multiple threads read-modify-write 
   shared state without synchronization, causing lost updates
 - **Synchronization**: using 'synchronized' blocks to ensure thread-safe
   access to shared resources
-- **Thread Pooling**: using 'ExecutorService' for managed concurrent execution
 
 ## Authors
-- TAN LI KANG
-- DARRYL CHAN WEI QIAN
-- CHARISSA SANTOS CRUZ
-- TIFFANY SIM LING LIN
+TAN LI KANG  
+DARRYL CHAN WEI QIAN  
+CHARISSA SANTOS CRUZ  
+TIFFANY SIM LING LIN
 
 
 
