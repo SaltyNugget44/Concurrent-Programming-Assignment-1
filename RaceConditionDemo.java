@@ -59,7 +59,7 @@ public class RaceConditionDemo {
 
         account.serviceCharge(); // steals money from customer for giving them service charge
 
-        double expectedBalance = initialBalance - (iterations * amountPerIteration) - BankAccount.SERVICE_CHARGE_AMOUNT;
+        double expectedBalance = initialBalance + (iterations * amountPerIteration) - BankAccount.SERVICE_CHARGE_AMOUNT;
 
         if  (expectedBalance < 0) {
             expectedBalance = 0;
