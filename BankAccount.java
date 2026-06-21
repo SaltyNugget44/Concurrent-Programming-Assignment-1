@@ -7,25 +7,21 @@ package Assignment_1;
  */
 public class BankAccount {
 
-    private String accountID;
     private String owner;
     private double balance;
 
     // Setters
-    public BankAccount(String accountId, String owner, double initialBalance) {
-        this.accountID = accountId;
+    public BankAccount(String owner, double initialBalance) {
         this.owner = owner;
         this.balance = initialBalance;
     }
     
     // Getters
     public double getBalance()   { return balance; }
-    public String getAccountId() { return accountID; }
     public String getOwner()     { return owner; }
     
     public String toString() {
-        return "Account ID : " + accountID
-             + "\nOwner      : " + owner
+        return "\nOwner      : " + owner
              + "\nBalance    : RM" + String.format("%.2f", balance);
     }
     
@@ -73,10 +69,24 @@ public class BankAccount {
         System.out.printf("  [*] Service charge of RM%.2f deducted.%n", SERVICE_CHARGE_AMOUNT);
     }
 
-    //For Race Condition
-    public void setBalanceRC(double balance) {
-        this.balance = balance;
+    //For Race Condition and Synchronization only
+    public void depositRCS(double amount) {
+        if (amount <= 0) {
+            System.out.println("  [!] Deposit amount must be greater than RM0.00");
+            return;
+        }
+        balance = balance + amount;
     }
 
+    public void withdrawRCS(double amount) {
+        if (amount <= 0) {
+            System.out.println("  [!] Withdrawal amount must be greater than RM0.00");
+            return;
+        }
+        if (amount > balance) {
+            return;
+        }
+        balance = balance - amount;
+    }
     
 }
