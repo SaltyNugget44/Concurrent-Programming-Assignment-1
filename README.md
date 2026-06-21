@@ -1,6 +1,6 @@
 # Concurrent Bank Account Transaction System
-> CSC2044 — Concurrent Programming Assignment
-A Java console application demonstrating sequential, concurrent, race conditions, and synchronization transaction processings on a shared bank account.
+> CSC2044 — Concurrent Programming Assignment  
+> A Java console application demonstrating sequential, concurrent, race conditions, and synchronization transaction processings on a shared bank account.
 
 ## Features
 - Sequential transaction processing
@@ -10,12 +10,12 @@ A Java console application demonstrating sequential, concurrent, race conditions
 - Automatic service charge deduction after each batch of transactions
 
 ## Project Structure
-├── BankAccount.java              # Core account logic (deposit, withdraw, service charge)  
-├── SequentialDemo.java           # Baseline — transactions run one at a time  
-├── ConcurrentDemo.java           # Concurrent — transactions run one at a time  
-├── SynchronizationDemo.java      # Thread-safe concurrent transactions  
-├── RaceConditionDemo.java        # Demonstrates race conditions without synchronization  
-└── BankAccountTransaction.java   # Main entry point
+├── BankAccount.java  # Core account logic (deposit, withdraw, service charge)  
+├── SequentialDemo.java  # Baseline — transactions run one at a time  
+├── ConcurrentDemo.java  # Concurrent — transactions run one at a time  
+├── SynchronizationDemo.java  # Thread-safe concurrent transactions  
+├── RaceConditionDemo.java  # Demonstrates race conditions without synchronization  
+└── BankAccountTransaction.java  # Main entry point
 
 ## How to Run
 1. Clone the repository
@@ -37,6 +37,7 @@ A Java console application demonstrating sequential, concurrent, race conditions
   access to shared resources
 
 ## Sample Output
+```
 ╔══════════════════════════════════════╗
 ║         Race Condition Demo          ║
 ╚══════════════════════════════════════╝
@@ -46,6 +47,7 @@ Initial Balance : RM1000.00
 Expected Balance: RM11000.00
 Actual Balance  : RM9449.00
 Race condition detected. Lost RM1551.00
+```
 
 ## Limitations
 - Single-run use case (no persistent data storage)
