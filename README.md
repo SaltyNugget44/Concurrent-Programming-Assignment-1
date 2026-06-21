@@ -53,7 +53,6 @@ Race condition detected. Lost RM1551.00
 - Single-run use case (no persistent data storage)
 - SequentialDemo and ConcurrentDemo operate independently from the main transaction 
   menu selection.
-- serviceCharge() bug in SynchronizationDemo when (balance <= 0)
 - Credentials stored in plaintext for demonstration purposes only
 
 ## Authors
