@@ -1,77 +1,138 @@
 package Assignment_1;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
 public class SynchronizationDemo {
+
+    private static final double amountPerIteration = 1.0;
+
     public static void run(BankAccount account, int choice, double amount) {
         System.out.println("\n╔══════════════════════════════════════╗");
-        System.out.println("║         Synchronization Demo         ║");
+        System.out.println("║        Synchronization Demo          ║");
         System.out.println("╚══════════════════════════════════════╝");
 
-        int threadCount = 5;
-        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+        int iterations = (int) amount;
 
         switch (choice) {
             case 1:
-                double depositPerThread = amount / threadCount;
-
-                for (int i = 0; i < threadCount; i++) {
-                    executor.submit(() -> {
-                        synchronized (account) {
-                            account.deposit(depositPerThread);
-                            System.out.println("[" + Thread.currentThread().getName() + "] " +
-                                    "Deposited " + depositPerThread + " → Balance: " + account.getBalance());
-                        }
-                        try {
-                            Thread.sleep(10);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                    });
-                }
+                runDeposit(account, iterations);
                 break;
-
-
             case 2:
-                double withdrawPerThread = amount / threadCount;
-
-                for (int i = 0; i < threadCount; i++) {
-                    executor.submit(() -> {
-                        synchronized (account) {
-                                account.withdraw(withdrawPerThread);
-                                System.out.println("  [" + Thread.currentThread().getName() + "] " +
-                                        "Withdrew RM" + String.format("%.2f", withdrawPerThread) +
-                                        " → Balance: RM" + String.format("%.2f", account.getBalance()));
-                        }
-                        try {
-                            Thread.sleep(10);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                    });
-                }
+                runWithdraw(account, iterations);
                 break;
-
-
             default:
                 System.out.println("Error");
+        }
+    }
 
+    private static void runDeposit(BankAccount account, int iterations) {
+        double initialBalance = account.getBalance();
+
+        int halved = iterations / 2;
+        int remainder = iterations % 2;
+
+        final int iterationsThread1 = halved + remainder;
+        final int iterationsThread2 = halved;
+
+        Runnable depositTask1 = () -> {
+            for (int i = 0; i < iterationsThread1; i++) {
+                synchronized (account) {
+                    account.depositRCS(amountPerIteration);
+                }
             }
+        };
 
+        Runnable depositTask2 = () -> {
+            for (int i = 0; i < iterationsThread2; i++) {
+                synchronized (account) {
+                    account.depositRCS(amountPerIteration);
+                }
+            }
+        };
 
-        executor.shutdown();
+        Thread t1 = new Thread(depositTask1, "Thread-1");
+        Thread t2 = new Thread(depositTask2, "Thread-2");
+
+        t1.start();
+        t2.start();
+
         try {
-            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
-                executor.shutdownNow();
-            }
+            t1.join();
+            t2.join();
         } catch (InterruptedException e) {
-            executor.shutdownNow();
             Thread.currentThread().interrupt();
         }
 
         account.serviceCharge(); // steals money from customer for giving them service charge
-        System.out.println("\nFinal Balance: RM" + String.format("%.2f", account.getBalance()));
+
+
+        double expectedBalance = initialBalance + (iterations * amountPerIteration) - BankAccount.SERVICE_CHARGE_AMOUNT;
+
+        if (expectedBalance < 0) {
+            expectedBalance = 0;
+        }
+
+        printResult(initialBalance, expectedBalance, account.getBalance(), iterations);
+    }
+
+    private static void runWithdraw(BankAccount account, int iterations) {
+        double initialBalance = account.getBalance();
+
+        int half = iterations / 2;
+        int remainder = iterations % 2;
+
+        final int iterationsThread1 = half + remainder;
+        final int iterationsThread2 = half;
+
+        if (initialBalance < iterations) {
+            System.out.println("  [!] Insufficient funds for this batch of withdrawals.");
+            return;
+        }
+
+        Runnable withdrawTask1 = () -> {
+            for (int i = 0; i < iterationsThread1; i++) {
+                synchronized (account) {
+                        account.withdrawRCS(amountPerIteration);
+
+                }
+            }
+        };
+
+        Runnable withdrawTask2 = () -> {
+            for (int i = 0; i < iterationsThread2; i++) {
+                synchronized (account) {
+                        account.withdrawRCS(amountPerIteration);
+
+                }
+            }
+        };
+
+        Thread t1 = new Thread(withdrawTask1, "Thread-1");
+        Thread t2 = new Thread(withdrawTask2, "Thread-2");
+
+        t1.start();
+        t2.start();
+
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        account.serviceCharge(); // steals money from customer for giving them service charge
+
+        double expectedBalance = initialBalance - (iterations * amountPerIteration) - BankAccount.SERVICE_CHARGE_AMOUNT;
+
+        if  (expectedBalance < 0) {
+            expectedBalance = 0;
+        }
+
+        printResult(initialBalance, expectedBalance, account.getBalance(), iterations);
+    }
+
+    private static void printResult(double initialBalance, double expectedBalance, double actualBalance, int iterations) {
+        System.out.println("\nTotal iterations: " + iterations);
+        System.out.println("Initial Balance : RM" + String.format("%.2f", initialBalance));
+        System.out.println("Expected Balance: RM" + String.format("%.2f", expectedBalance));
+        System.out.println("Actual Balance  : RM" + String.format("%.2f", actualBalance));
     }
 }
